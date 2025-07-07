@@ -7,6 +7,7 @@ import Fonts from 'unplugin-fonts/vite'
 // Utilities
 import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
+import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -29,6 +30,29 @@ export default defineConfig({
       },
     }),
   ],
+  
+  // Configuración específica para librería
+  build: {
+    lib: {
+      entry: resolve(__dirname, 'src/index.js'), // Tu archivo de entrada
+      name: 'BotQP',
+      fileName: (format) => `index.${format}.js`,
+      formats: ['es', 'cjs', 'umd']
+    },
+    rollupOptions: {
+      // Asegúrate de externalizar las deps que no quieres bundlear
+      external: ['vue', 'vuetify'],
+      output: {
+        globals: {
+          vue: 'Vue',
+          vuetify: 'Vuetify'
+        }
+      }
+    },
+    sourcemap: true,
+    minify: false // Puedes cambiar a true para producción
+  },
+  
   optimizeDeps: {
     exclude: ['vuetify'],
   },
